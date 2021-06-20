@@ -8,7 +8,7 @@ namespace hsm_api.Infrastructure
 {
     public static class MessageService
     {
-        public static void IsValidMessageName(string name)
+        public static void IsKnownMessageName(string name)
         {
             throw new NotImplementedException();
         }
