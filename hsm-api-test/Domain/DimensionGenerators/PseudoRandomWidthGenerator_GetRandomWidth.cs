@@ -21,20 +21,7 @@ namespace hsm_api_test.Domain.DimensionGenerators
             float randomWidth = generator.GetRandomWidth();
             Assert.True(randomWidth > lowLimit, "Random width should be higher than low limit");
             Assert.True(randomWidth < lowLimit, "Random width should be smaller than high limit");
-        }
-
-        [Theory]
-        [InlineData(-5, 10)]
-        [InlineData(10, -5)]
-        [InlineData(-10, -5)]
-        public void GetRandomWidth_Not_Accept_Negative_Limits(float lowLimit, float highLimit)
-        {
-            var generator = new PseudoRandomWidthGenerator(lowLimit, highLimit);
-
-            var exception = Assert.Throws<ArgumentException>(() => generator.GetRandomWidth());
-            Assert.Contains("negative", exception.Message, StringComparison.InvariantCultureIgnoreCase);
-            Assert.Contains("limit", exception.Message, StringComparison.InvariantCultureIgnoreCase);
-        }
+        } 
 
         [Fact]
         public void GetRandomWidth_Randomizer_Depend_On_Seed()
