@@ -10,11 +10,13 @@ namespace hsm_api_test.Infrastructure
 {
     public class MessageService_IsKnownMessageName
     {
-        [Fact]
-        public void IsKnownMessageName_Throw_Exception_On_Bad_Format_With_Message()
+        [Theory]
+        [InlineData("START$PRODUCTION")]
+        [InlineData("STARTproduction")]
+        public void IsKnownMessageName_Throw_Exception_On_Bad_Format_With_Message(string messageName)
         {
             var expectedMessage = $"Invalid message name format, use {nameof(MessageService.FormatMessageName)} before";
-            Action methodCall = () => MessageService.IsKnownMessageName("START$PRODUCTION");
+            Action methodCall = () => MessageService.IsKnownMessageName(messageName);
             
             var exception = Assert.Throws<FormatException>(methodCall);
             Assert.Equal(expectedMessage, exception.Message);
