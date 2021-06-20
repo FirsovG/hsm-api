@@ -20,7 +20,7 @@ namespace hsm_api_test.Domain.DimensionGenerators
             var generator = new PseudoRandomWidthGenerator(lowLimit, highLimit);
             float randomWidth = generator.GetRandomWidth();
             Assert.True(randomWidth > lowLimit, "Random width should be higher than low limit");
-            Assert.True(randomWidth < lowLimit, "Random width should be smaller than high limit");
+            Assert.True(randomWidth < highLimit, "Random width should be smaller than high limit");
         } 
 
         [Fact]
