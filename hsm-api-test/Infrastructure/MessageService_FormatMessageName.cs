@@ -21,6 +21,8 @@ namespace hsm_api_test.Infrastructure
         [InlineData("START_PRODUCTION")]
         [InlineData("START__PRODUCTION")]
         [InlineData("START$PRODUCTION")]
+        [InlineData("START8PRODUCTION")]
+        [InlineData("START!PRODUCTION")]
         public void FormatMessageName_Remove_Non_Alphabetic(string unformatedName)
         {
             var formatedName = MessageService.FormatMessageName(unformatedName);
