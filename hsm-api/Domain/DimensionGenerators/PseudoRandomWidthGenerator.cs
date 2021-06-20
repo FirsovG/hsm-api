@@ -37,7 +37,7 @@ namespace hsm_api.Domain.DimensionGenerators
 
         public float GetRandomWidth()
         {
-            throw new NotImplementedException();
+            return (float)(_randomizer.NextDouble() * (_highLimit - _lowLimit) + _lowLimit);
         }
     }
 }
