@@ -1,4 +1,5 @@
-﻿using System;
+﻿using hsm_api.Models.Messages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,9 +9,17 @@ namespace hsm_api.Infrastructure
 {
     public static class MessageService
     {
+        // TODO: Fix open closed principle violation
         public static bool IsKnownMessageName(string name)
         {
-            throw new NotImplementedException();
+            if (FormatMessageName(name) != name)
+                throw new FormatException($"Invalid message name format, use {nameof(MessageService.FormatMessageName)} before");
+
+            var nameWithSuffix = name + "MESSAGE";
+            if (nameWithSuffix == FormatMessageName(nameof(StartProductionMessage)))
+                return true;
+            else
+                return false;
         }
 
         public static string FormatMessageName(string name)
