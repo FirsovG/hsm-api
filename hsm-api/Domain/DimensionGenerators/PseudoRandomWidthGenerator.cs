@@ -22,6 +22,8 @@ namespace hsm_api.Domain.DimensionGenerators
                 throw new ArgumentException("Low limit cannot be a negative value");
             if (highLimit < 0)
                 throw new ArgumentException("High limit cannot be a negative value");
+            if (highLimit - lowLimit < 2)
+                throw new ArgumentException("To create value in range, the limit difference should be greater or equal 2");
 
             _randomizer = randomizer;
             _lowLimit = lowLimit;
