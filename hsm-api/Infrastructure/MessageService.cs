@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace hsm_api.Infrastructure
 {
-    public class MessageService
+    public static class MessageService
     {
-        public void IsValidMessageName(string name)
+        public static void IsValidMessageName(string name)
         {
             throw new NotImplementedException();
         }
 
-        public string FormatMessageName(string name)
+        public static string FormatMessageName(string name)
         {
-            throw new NotImplementedException();
+            var formatedName = name.ToUpper();
+            var rgx = new Regex("[^A-Z]");
+            formatedName = rgx.Replace(formatedName, "");
+            return formatedName;
         }
     }
 }
