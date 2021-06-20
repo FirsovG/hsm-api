@@ -18,6 +18,11 @@ namespace hsm_api.Domain.DimensionGenerators
         /// <param name="randomizer">Self configured randomizer</param>
         public PseudoRandomWidthGenerator(Random randomizer, float lowLimit, float highLimit)
         {
+            if (lowLimit < 0)
+                throw new ArgumentException("Low limit cannot be a negative value");
+            if (highLimit < 0)
+                throw new ArgumentException("High limit cannot be a negative value");
+
             _randomizer = randomizer;
             _lowLimit = lowLimit;
             _highLimit = highLimit;
