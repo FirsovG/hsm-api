@@ -14,13 +14,25 @@ namespace hsm_api_test.Domain.DimensionGenerators
         [InlineData(-5, 10)]
         [InlineData(10, -5)]
         [InlineData(-10, -5)]
-        public void GetRandomWidth_Not_Accept_Negative_Limits(float lowLimit, float highLimit)
+        public void Constructor_Not_Accept_Negative_Limits(float lowLimit, float highLimit)
         {
             Action construction = () => new PseudoRandomWidthGenerator(lowLimit, highLimit);
 
             var exception = Assert.Throws<ArgumentException>(construction);
             Assert.Contains("negative", exception.Message, StringComparison.InvariantCultureIgnoreCase);
             Assert.Contains("limit", exception.Message, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        [Theory]
+        [InlineData(1000, 1001)]
+        [InlineData(1000, 500)]
+        public void Constructor_Not_Accept_Limit_Difference_Lower_1(float lowLimit, float highLimit)
+        {
+            Action construction = () => new PseudoRandomWidthGenerator(lowLimit, highLimit);
+
+            var exception = Assert.Throws<ArgumentException>(construction);
+            Assert.Contains("To create value in range, the limit difference should be greater or equal 1", 
+                            exception.Message, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }
