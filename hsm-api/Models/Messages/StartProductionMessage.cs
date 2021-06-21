@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace hsm_api.Models.Messages
 {
-    public class StartProductionMessage : IMessage
+    public class StartProductionMessage : Message
     {
-        public long MessageId { get; set; }
-        public DateTime MessageCreationDate { get; set; }
         public string CoilId { get; set; }
         public DateTime ProductionStartDate { get; set; }
     }
