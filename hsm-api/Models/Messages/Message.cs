@@ -10,6 +10,6 @@ namespace hsm_api.Models.Messages
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long MessageId { get; set; }
-        public DateTime MessageCreationDate { get; set; } = DateTime.Now.AddMinutes(-1);
+        public DateTime MessageCreationDate { get; set; } = DateTime.Now;
     }
 }
