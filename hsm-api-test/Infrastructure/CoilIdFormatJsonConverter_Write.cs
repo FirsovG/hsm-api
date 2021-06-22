@@ -16,10 +16,9 @@ namespace hsm_api_test.Infrastructure
         public void Write_Coil_Id_Contain_HB_Prefix()
         {
             var message = new StartProductionMessage();
-            message.CoilId = 0;
 
             var messageJson = JsonSerializer.Serialize(message);
-            var coilId = JObject.Parse(messageJson)["coilId"].ToString();
+            var coilId = JObject.Parse(messageJson)["CoilId"].ToString();
 
             Assert.StartsWith("HB", coilId);
         }
@@ -30,7 +29,7 @@ namespace hsm_api_test.Infrastructure
             var message = new StartProductionMessage();
 
             var messageJson = JsonSerializer.Serialize(message);
-            var coilId = JObject.Parse(messageJson)["coilId"].ToString();
+            var coilId = JObject.Parse(messageJson)["CoilId"].ToString();
 
             Assert.Equal(12, coilId.Length);
         }
