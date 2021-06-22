@@ -33,5 +33,17 @@ namespace hsm_api_test.Infrastructure
 
             Assert.Equal(12, coilId.Length);
         }
+
+        [Fact]
+        public void Write_Coil_Id_Ends_With_1()
+        {
+            var message = new StartProductionMessage();
+            message.CoilId = 1;
+
+            var messageJson = JsonSerializer.Serialize(message);
+            var coilId = JObject.Parse(messageJson)["CoilId"].ToString();
+
+            Assert.EndsWith("1", coilId);
+        }
     }
 }
