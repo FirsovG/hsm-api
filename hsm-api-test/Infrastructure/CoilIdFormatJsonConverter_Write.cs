@@ -1,0 +1,38 @@
+﻿using hsm_api.Models.Messages;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace hsm_api_test.Infrastructure
+{
+    public class CoilIdFormatJsonConverter_Write
+    {
+        [Fact]
+        public void Write_Coil_Id_Contain_HB_Prefix()
+        {
+            var message = new StartProductionMessage();
+            message.CoilId = 0;
+
+            var messageJson = JsonSerializer.Serialize(message);
+            var coilId = JObject.Parse(messageJson)["coilId"].ToString();
+
+            Assert.StartsWith("HB", coilId);
+        }
+
+        [Fact]
+        public void Write_Coil_Id_Length_12()
+        {
+            var message = new StartProductionMessage();
+
+            var messageJson = JsonSerializer.Serialize(message);
+            var coilId = JObject.Parse(messageJson)["coilId"].ToString();
+
+            Assert.Equal(12, coilId.Length);
+        }
+    }
+}
