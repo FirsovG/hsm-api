@@ -1,5 +1,6 @@
 ﻿using hsm_api.Infrastructure;
 using hsm_api.Models;
+using hsm_api.Models.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace hsm_api.Domain.StartProduction
@@ -42,17 +44,28 @@ namespace hsm_api.Domain.StartProduction
 
         private async void NewProductionStartHandler(object sender, System.Timers.ElapsedEventArgs e)
         {
+            const string mediaType = "application/json";
             using (var scope = _scopeFactory.CreateScope())
             {
-                var db = scope.ServiceProvider.GetRequiredService<WebhookContext>();
-                var subscribers = db.Webhooks.Where(x => x.IsActive == true && x.SubscribedPlantEvent == "startProduction");
+                var webhookContext = scope.ServiceProvider.GetRequiredService<WebhookContext>();
+                var subscribers = webhookContext.Webhooks.Where(x => x.IsActive == true && x.SubscribedPlantEvent == "startProduction");
+                var messageContext = scope.ServiceProvider.GetRequiredService<MessageContext>();
+                var spMessageInJson = await GetStartProductionMessageInJson(messageContext);
                 foreach (var s in subscribers)
                 {
-                    var message = "{ \"status\": \"productionStarted\", \"webhookId\": \"" + s.Id + "\"}";
-                    await _httpClient.PostAsync(s.CallbackUrl, new StringContent(message, Encoding.UTF8, "application/json"));
+                    await _httpClient.PostAsync(s.CallbackUrl, new StringContent(spMessageInJson, Encoding.UTF8, mediaType));
                     _logger.LogInformation($"Start production event was sent to {s.CallbackUrl}");
                 }
             }
+        }
+
+        private async Task<string> GetStartProductionMessageInJson(MessageContext context)
+        {
+            var message = new StartProductionMessage();
+            context.StartProductionMessages.Add(message);
+            await context.SaveChangesAsync();
+
+            return JsonSerializer.Serialize(message);
         }
     }
 }
