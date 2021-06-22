@@ -1,6 +1,7 @@
 using hsm_api.Domain.StartProduction;
 using hsm_api.Infrastructure;
 using hsm_api.Models;
+using hsm_api.Models.Messages;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,7 @@ namespace hsm_api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<WebhookContext>(opt => opt.UseInMemoryDatabase(nameof(Webhook)));
+            services.AddDbContext<MessageContext>(opt => opt.UseInMemoryDatabase(nameof(Message)));
             services.AddSingleton<ITimerTillNextProductionStart, TimerTillNextProductionStart>();
             services.AddHttpClient<StartProductionService>();
             services.AddSingleton<StartProductionService>();
