@@ -13,7 +13,7 @@ namespace hsm_api.Models.Messages
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [JsonConverter(typeof(CoilIdFormatJsonConverter))]
-        public string CoilId { get; set; }
+        public int CoilId { get; set; }
         public DateTime ProductionStartDate { get; set; } = DateTime.Now.AddSeconds(-95);
     }
 }
