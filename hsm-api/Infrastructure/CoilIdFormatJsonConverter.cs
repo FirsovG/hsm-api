@@ -16,7 +16,8 @@ namespace hsm_api.Infrastructure
 
         public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            var coilIdAsString = value.ToString();
+            writer.WriteStringValue("HB" + coilIdAsString.PadLeft(10, '0'));
         }
     }
 }
