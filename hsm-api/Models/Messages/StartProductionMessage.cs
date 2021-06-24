@@ -11,9 +11,7 @@ namespace hsm_api.Models.Messages
 {
     public class StartProductionMessage : Message
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [JsonConverter(typeof(CoilIdFormatJsonConverter))]
-        public int CoilId { get; set; }
+        public string CoilId { get; set; }
         public DateTime ProductionStartDate { get; set; } = DateTime.Now.AddSeconds(-95);
     }
 }
