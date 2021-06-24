@@ -27,7 +27,8 @@ namespace hsm_api
             services.AddDbContext<WebhookContext>(opt => opt.UseInMemoryDatabase(nameof(Webhook)));
             services.AddDbContext<MessageContext>(opt => opt.UseInMemoryDatabase(nameof(Message)));
             services.AddSingleton<ITimerTillNextProductionStart, TimerTillNextProductionStart>();
-            services.AddHttpClient<StartProductionService>();
+            services.AddHttpClient<StartProductionHttpMessageSender>();
+            services.AddSingleton<StartProductionHttpMessageSender>();
             services.AddSingleton<StartProductionService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>

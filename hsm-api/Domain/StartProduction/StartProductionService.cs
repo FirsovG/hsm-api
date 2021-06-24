@@ -16,22 +16,19 @@ namespace hsm_api.Domain.StartProduction
     public class StartProductionService
     {
         private readonly ITimerTillNextProductionStart _timer;
-        private readonly ILogger _logger;
-        private readonly HttpClient _httpClient;
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly StartProductionHttpMessageSender _messageSender;
 
         /// <summary>
         /// Service handels material production start events
         /// </summary>
-        public StartProductionService(ILogger<StartProductionService> logger,
-                                      ITimerTillNextProductionStart timer,
-                                      HttpClient httpClient,
-                                      IServiceScopeFactory scopeFactory)
+        public StartProductionService(ITimerTillNextProductionStart timer,
+                                      IServiceScopeFactory scopeFactory,
+                                      StartProductionHttpMessageSender messageSender)
         {
-            _logger = logger;
             _timer = timer;
-            _httpClient = httpClient;
             _scopeFactory = scopeFactory;
+            _messageSender = messageSender;
 
             SubscribeToAndStartTimer();
         }
@@ -44,28 +41,30 @@ namespace hsm_api.Domain.StartProduction
 
         private async void NewProductionStartHandler(object sender, System.Timers.ElapsedEventArgs e)
         {
-            const string mediaType = "application/json";
             using (var scope = _scopeFactory.CreateScope())
             {
-                var webhookContext = scope.ServiceProvider.GetRequiredService<WebhookContext>();
-                var subscribers = webhookContext.Webhooks.Where(x => x.IsActive == true && x.SubscribedPlantEvent == "startProduction");
-                var messageContext = scope.ServiceProvider.GetRequiredService<MessageContext>();
-                var spMessageInJson = await GetStartProductionMessageInJson(messageContext);
-                foreach (var s in subscribers)
-                {
-                    await _httpClient.PostAsync(s.CallbackUrl, new StringContent(spMessageInJson, Encoding.UTF8, mediaType));
-                    _logger.LogInformation($"Start production event was sent to {s.CallbackUrl}");
-                }
+                await GetSubsAndPostProductionStart(scope);
             }
         }
 
-        private async Task<string> GetStartProductionMessageInJson(MessageContext context)
+        private async Task GetSubsAndPostProductionStart(IServiceScope scope)
+        {
+            var webhookContext = scope.ServiceProvider.GetRequiredService<WebhookContext>();
+            var subscribers = webhookContext.Webhooks.Where(x => x.IsActive == true && x.SubscribedPlantEvent == "startProduction");
+            var messageContext = scope.ServiceProvider.GetRequiredService<MessageContext>();
+            var message = await GetStartProductionMessage(messageContext);
+            foreach (var s in subscribers)
+            {
+                await _messageSender.Post(message, s);
+            }
+        }
+
+        private async Task<StartProductionMessage> GetStartProductionMessage(MessageContext context)
         {
             var message = new StartProductionMessage();
             context.StartProductionMessages.Add(message);
             await context.SaveChangesAsync();
-
-            return JsonSerializer.Serialize(message);
+            return message;
         }
     }
 }
