@@ -23,12 +23,12 @@ namespace hsm_api.Domain.StartProduction
             _httpClient = httpClient;
         }
 
-        public async Task Post(StartProductionMessage message, Webhook s)
+        public async Task Post(StartProductionMessage message, Webhook subscriber)
         {
             const string mediaType = "application/json";
             var messageAsJson = JsonSerializer.Serialize(message);
-            await _httpClient.PostAsync(s.CallbackUrl, new StringContent(messageAsJson, Encoding.UTF8, mediaType));
-            _logger.LogInformation($"Start production event was sent to {s.CallbackUrl}");
+            await _httpClient.PostAsync(subscriber.CallbackUrl, new StringContent(messageAsJson, Encoding.UTF8, mediaType));
+            _logger.LogInformation($"Start production event was sent to {subscriber.CallbackUrl}");
         }
     }
 }
