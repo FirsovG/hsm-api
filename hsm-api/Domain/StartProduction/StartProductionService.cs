@@ -55,7 +55,7 @@ namespace hsm_api.Domain.StartProduction
             var message = await GetStartProductionMessage(messageContext);
             foreach (var s in subscribers)
             {
-                await _messageSender.Post(message, s);
+                await _messageSender.PostAsync(message, s);
             }
         }
 

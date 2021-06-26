@@ -23,7 +23,7 @@ namespace hsm_api.Domain.StartProduction
             _httpClient = httpClient;
         }
 
-        public async Task Post(StartProductionMessage message, Webhook subscriber)
+        public async Task PostAsync(StartProductionMessage message, Webhook subscriber)
         {
             const string mediaType = "application/json";
             var messageAsJson = JsonSerializer.Serialize(message);
