@@ -10,7 +10,7 @@
 ## Roadmap by functionality
 The functionality will be implemented in the order listed below.
 ### Required
-- [ ] Production Start
+- [X] Production Start
 - [ ] Production End
 - [ ] Production Status
 - [ ] Downtime
