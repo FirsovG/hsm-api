@@ -15,14 +15,14 @@ namespace hsm_api.Domain.StartProduction
 {
     public class StartProductionService
     {
-        private readonly ITimerTillNextProductionStart _timer;
+        private readonly IDynamicIntervalTimer _timer;
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly StartProductionHttpMessageSender _messageSender;
 
         /// <summary>
         /// Service handels material production start events
         /// </summary>
-        public StartProductionService(ITimerTillNextProductionStart timer,
+        public StartProductionService(IDynamicIntervalTimer timer,
                                       IServiceScopeFactory scopeFactory,
                                       StartProductionHttpMessageSender messageSender)
         {
@@ -30,13 +30,12 @@ namespace hsm_api.Domain.StartProduction
             _scopeFactory = scopeFactory;
             _messageSender = messageSender;
 
-            SubscribeToAndStartTimer();
+            SubscribeToTimer();
         }
 
-        private void SubscribeToAndStartTimer()
+        private void SubscribeToTimer()
         {
             _timer.TimeElapsed += NewProductionStartHandler;
-            _timer.Start();
         }
 
         private async void NewProductionStartHandler(object sender, System.Timers.ElapsedEventArgs e)

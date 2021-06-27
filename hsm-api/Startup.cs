@@ -1,3 +1,4 @@
+using hsm_api.ConfigurationOptions;
 using hsm_api.Domain.StartProduction;
 using hsm_api.Infrastructure;
 using hsm_api.Models;
@@ -24,9 +25,10 @@ namespace hsm_api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<TimerSettings>(Configuration.GetSection(nameof(TimerSettings)));
             services.AddDbContext<WebhookContext>(opt => opt.UseInMemoryDatabase(nameof(Webhook)));
             services.AddDbContext<MessageContext>(opt => opt.UseInMemoryDatabase(nameof(Message)));
-            services.AddSingleton<ITimerTillNextProductionStart, TimerTillNextProductionStart>();
+            services.AddSingleton<IDynamicIntervalTimer, DynamicIntervalTimer>();
             services.AddHttpClient<StartProductionHttpMessageSender>();
             services.AddSingleton<StartProductionHttpMessageSender>();
             services.AddSingleton<StartProductionService>();
@@ -57,6 +59,13 @@ namespace hsm_api
             {
                 endpoints.MapControllers();
             });
+
+            InitTimers(app);
+        }
+
+        private static void InitTimers(IApplicationBuilder app)
+        {
+            app.ApplicationServices.GetService<IDynamicIntervalTimer>();
         }
     }
 }

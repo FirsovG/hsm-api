@@ -2,11 +2,10 @@
 
 namespace hsm_api.Infrastructure
 {
-    public interface ITimerTillNextProductionStart
+    public interface IDynamicIntervalTimer
     {
         event ElapsedEventHandler TimeElapsed;
 
         void Dispose();
-        void Start();
     }
 }
