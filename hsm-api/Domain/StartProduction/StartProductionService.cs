@@ -1,4 +1,5 @@
-﻿using hsm_api.Infrastructure;
+﻿using hsm_api.ConfigurationOptions;
+using hsm_api.Infrastructure;
 using hsm_api.Models;
 using hsm_api.Models.Messages;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,14 +16,14 @@ namespace hsm_api.Domain.StartProduction
 {
     public class StartProductionService
     {
-        private readonly IDynamicIntervalTimer _timer;
+        private readonly IDynamicIntervalTimer<StartProductionTimerSettings> _timer;
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly StartProductionHttpMessageSender _messageSender;
 
         /// <summary>
         /// Service handels material production start events
         /// </summary>
-        public StartProductionService(IDynamicIntervalTimer timer,
+        public StartProductionService(IDynamicIntervalTimer<StartProductionTimerSettings> timer,
                                       IServiceScopeFactory scopeFactory,
                                       StartProductionHttpMessageSender messageSender)
         {
