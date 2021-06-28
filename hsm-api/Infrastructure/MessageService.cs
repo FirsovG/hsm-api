@@ -29,5 +29,10 @@ namespace hsm_api.Infrastructure
             formatedName = rgx.Replace(formatedName, "");
             return formatedName;
         }
+
+        public static string GetMessageNameFromMessageClass(Type messageClass)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
