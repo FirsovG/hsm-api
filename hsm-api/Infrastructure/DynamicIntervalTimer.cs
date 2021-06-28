@@ -8,10 +8,11 @@ using System.Timers;
 
 namespace hsm_api.Infrastructure
 {
-    public class DynamicIntervalTimer : IDisposable, IDynamicIntervalTimer
+    public class DynamicIntervalTimer<T> : IDynamicIntervalTimer<T>, IDisposable where T : ITimerSettings
     {
         private readonly List<ElapsedEventHandler> _eventHandlers;
         private Timer _timer;
+        protected T _timerSettings;
 
         /// <summary>
         /// Sends event when the production of new coil started
@@ -31,22 +32,26 @@ namespace hsm_api.Infrastructure
         }
 
         /// <summary>
-        /// Autoreset-Timer with interval of <see cref="TimerSettings.StartProduction"/>
+        /// Autoreset-Timer with interval from <see cref="T.Interval"/>
+        /// Timer is started after construction
         /// </summary>
-        public DynamicIntervalTimer(IOptionsMonitor<TimerSettings> settings)
+        public DynamicIntervalTimer(IOptionsMonitor<T> settings)
         {
             _eventHandlers = new List<ElapsedEventHandler>();
-            SetTimer(settings.CurrentValue);
-            settings.OnChange(SetTimer);
+            UpdateTimerSettings(settings.CurrentValue);
+            settings.OnChange(UpdateTimerSettings);
         }
 
-        public void SetTimer(TimerSettings settings)
+        public void UpdateTimerSettings(T settings)
         {
-            var newTimer = new Timer() { AutoReset = true, Interval = settings.StartProduction };
+            _timerSettings = settings;
+            Timer newTimer = RecreateTimer();
             ResubscribeEventHandlers(newTimer);
             _timer = newTimer;
             _timer.Start();
         }
+
+        private Timer RecreateTimer() => new Timer() { AutoReset = true, Interval = _timerSettings.Interval };
 
         private void ResubscribeEventHandlers(Timer newTimer)
         {
