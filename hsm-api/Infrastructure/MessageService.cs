@@ -32,7 +32,12 @@ namespace hsm_api.Infrastructure
 
         public static string GetMessageNameFromMessageClass(Type messageClass)
         {
-            throw new NotImplementedException();
+            if (!messageClass.IsSubclassOf(typeof(Message)))
+                throw new ArgumentException("Type is not derived from Message class");
+
+            string className = messageClass.Name;
+            className = className.ToUpper().Replace("MESSAGE", "");
+            return FormatMessageName(className);
         }
     }
 }
