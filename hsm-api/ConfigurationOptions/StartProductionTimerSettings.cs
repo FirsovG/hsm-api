@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace hsm_api.ConfigurationOptions
 {
-    public class TimerSettings
+    public class StartProductionTimerSettings : ITimerSettings
     {
-        public int StartProduction { get; set; }
+        public int Interval { get; set; }
     }
 }
