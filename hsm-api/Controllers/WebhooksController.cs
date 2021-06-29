@@ -9,6 +9,7 @@ using hsm_api.Models;
 using System.Net.Http;
 using System.Text;
 using hsm_api.Domain.StartProduction;
+using hsm_api.Infrastructure;
 
 namespace hsm_api.Controllers
 {
@@ -41,6 +42,9 @@ namespace hsm_api.Controllers
         [HttpPost]
         public async Task<ActionResult<Webhook>> PostWebhook(Webhook webhook)
         {
+            if (!MessageService.IsKnownMessageName(webhook.SubscribedPlantEvent))
+                return UnprocessableEntity("SubscribedPlantEvent is not known");
+
             _context.Webhooks.Add(webhook);
             await _context.SaveChangesAsync();
 

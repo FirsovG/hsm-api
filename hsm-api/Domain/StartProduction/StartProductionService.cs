@@ -50,13 +50,19 @@ namespace hsm_api.Domain.StartProduction
         private async Task GetSubsAndPostProductionStart(IServiceScope scope)
         {
             var webhookContext = scope.ServiceProvider.GetRequiredService<WebhookContext>();
-            var subscribers = webhookContext.Webhooks.Where(x => x.IsActive == true && x.SubscribedPlantEvent == "startProduction");
+            var subscribers = GetSubscribers(webhookContext);
             var messageContext = scope.ServiceProvider.GetRequiredService<MessageContext>();
             var message = await GetStartProductionMessage(messageContext);
             foreach (var s in subscribers)
             {
                 await _messageSender.PostAsync(message, s);
             }
+        }
+
+        private IEnumerable<Webhook> GetSubscribers(WebhookContext webhookContext)
+        {
+            string eventName = MessageService.GetMessageNameFromMessageClass(typeof(StartProductionMessage));
+            return webhookContext.Webhooks.Where(x => x.IsActive == true && x.SubscribedPlantEvent == eventName);
         }
 
         private async Task<StartProductionMessage> GetStartProductionMessage(MessageContext context)
