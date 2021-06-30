@@ -1,4 +1,5 @@
-﻿using hsm_api.Domain.DimensionGenerators;
+﻿using hsm_api.ConfigurationOptions.DimensionSettings;
+using hsm_api.Domain.DimensionGenerators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,10 @@ namespace hsm_api_test.Domain.DimensionGenerators
         [InlineData(-5, 10)]
         [InlineData(10, -5)]
         [InlineData(-10, -5)]
-        public void Constructor_Not_Accept_Negative_Limits(float lowLimit, float highLimit)
+        public void Constructor_Not_Accept_Negative_Limits(float minLimit, float maxLimit)
         {
-            Action construction = () => new PseudoRandomDimensionGenerator(lowLimit, highLimit);
+            var settings = new WidthGeneratorSettings { MinLimit = minLimit, MaxLimit = maxLimit };
+            Action construction = () => new PseudoRandomDimensionGenerator<WidthGeneratorSettings>(settings);
 
             var exception = Assert.Throws<ArgumentException>(construction);
             Assert.Contains("negative", exception.Message, StringComparison.InvariantCultureIgnoreCase);
@@ -27,9 +29,10 @@ namespace hsm_api_test.Domain.DimensionGenerators
         [InlineData(1000, 1001)]
         [InlineData(1000, 1000)]
         [InlineData(1000, 500)]
-        public void Constructor_Not_Accept_Limit_Difference_Lower_2(float lowLimit, float highLimit)
+        public void Constructor_Not_Accept_Limit_Difference_Lower_2(float minLimit, float maxLimit)
         {
-            Action construction = () => new PseudoRandomDimensionGenerator(lowLimit, highLimit);
+            var settings = new WidthGeneratorSettings { MinLimit = minLimit, MaxLimit = maxLimit };
+            Action construction = () => new PseudoRandomDimensionGenerator<WidthGeneratorSettings>(settings);
 
             var exception = Assert.Throws<ArgumentException>(construction);
             Assert.Contains("To create value in range, the limit difference should be greater or equal 2", 
