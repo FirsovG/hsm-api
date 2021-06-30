@@ -17,7 +17,7 @@ namespace hsm_api_test.Domain.DimensionGenerators
         [InlineData(1000, 1002)]
         public void GetRandomWidth_Limits_Considered(float lowLimit, float highLimit)
         {
-            var generator = new PseudoRandomDimensionsGenerator(lowLimit, highLimit);
+            var generator = new PseudoRandomDimensionGenerator(lowLimit, highLimit);
             float randomValue = generator.GetValue();
             Assert.True(randomValue > lowLimit, "Random value should be higher than low limit");
             Assert.True(randomValue < highLimit, "Random value should be smaller than high limit");
@@ -30,10 +30,10 @@ namespace hsm_api_test.Domain.DimensionGenerators
             const int lowLimit = 500;
             const int highLimit = 1000;
             var randomizer1 = new Random(seed);
-            var generator1 = new PseudoRandomDimensionsGenerator(randomizer1, lowLimit, highLimit);
+            var generator1 = new PseudoRandomDimensionGenerator(randomizer1, lowLimit, highLimit);
             var generatedValue1 = new float[10];
             var randomizer2 = new Random(seed);
-            var generator2 = new PseudoRandomDimensionsGenerator(randomizer2, lowLimit, highLimit);
+            var generator2 = new PseudoRandomDimensionGenerator(randomizer2, lowLimit, highLimit);
             var generatedValue2 = new float[10];
 
             for (int i = 0; i < generatedValue1.Length; i++)

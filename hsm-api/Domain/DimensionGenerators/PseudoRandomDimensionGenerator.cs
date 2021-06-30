@@ -1,11 +1,12 @@
-﻿using System;
+﻿using hsm_api.ConfigurationOptions.DimensionSettings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace hsm_api.Domain.DimensionGenerators
 {
-    public class PseudoRandomDimensionsGenerator
+    public class PseudoRandomDimensionsGenerator<T> where T : IDimensionGeneratorSettings
     {
         private readonly Random _randomizer;
 
