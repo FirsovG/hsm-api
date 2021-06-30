@@ -8,7 +8,7 @@ using Xunit;
 
 namespace hsm_api_test.Domain.DimensionGenerators
 {
-    public class PseudoRandomWidthGenerator_Constructor
+    public class PseudoRandomDimensionsGenerator_Constructor
     {
         [Theory]
         [InlineData(-5, 10)]
@@ -16,7 +16,7 @@ namespace hsm_api_test.Domain.DimensionGenerators
         [InlineData(-10, -5)]
         public void Constructor_Not_Accept_Negative_Limits(float lowLimit, float highLimit)
         {
-            Action construction = () => new PseudoRandomWidthGenerator(lowLimit, highLimit);
+            Action construction = () => new PseudoRandomDimensionsGenerator(lowLimit, highLimit);
 
             var exception = Assert.Throws<ArgumentException>(construction);
             Assert.Contains("negative", exception.Message, StringComparison.InvariantCultureIgnoreCase);
@@ -29,7 +29,7 @@ namespace hsm_api_test.Domain.DimensionGenerators
         [InlineData(1000, 500)]
         public void Constructor_Not_Accept_Limit_Difference_Lower_2(float lowLimit, float highLimit)
         {
-            Action construction = () => new PseudoRandomWidthGenerator(lowLimit, highLimit);
+            Action construction = () => new PseudoRandomDimensionsGenerator(lowLimit, highLimit);
 
             var exception = Assert.Throws<ArgumentException>(construction);
             Assert.Contains("To create value in range, the limit difference should be greater or equal 2", 

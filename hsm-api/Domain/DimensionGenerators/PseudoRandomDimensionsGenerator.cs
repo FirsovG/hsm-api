@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace hsm_api.Domain.DimensionGenerators
 {
-    public class PseudoRandomWidthGenerator
+    public class PseudoRandomDimensionsGenerator
     {
         private readonly Random _randomizer;
 
@@ -16,7 +16,7 @@ namespace hsm_api.Domain.DimensionGenerators
         /// Provide own randomizer
         /// </summary>
         /// <param name="randomizer">Self configured randomizer</param>
-        public PseudoRandomWidthGenerator(Random randomizer, float lowLimit, float highLimit)
+        public PseudoRandomDimensionsGenerator(Random randomizer, float lowLimit, float highLimit)
         {
             if (lowLimit < 0)
                 throw new ArgumentException("Low limit cannot be a negative value");
@@ -33,9 +33,9 @@ namespace hsm_api.Domain.DimensionGenerators
         /// <summary>
         /// Create with standart <see cref="System.Random()"/>
         /// </summary>
-        public PseudoRandomWidthGenerator(float lowLimit, float highLimit) : this (new Random(), lowLimit, highLimit) { }
+        public PseudoRandomDimensionsGenerator(float lowLimit, float highLimit) : this (new Random(), lowLimit, highLimit) { }
 
-        public float GetRandomWidth()
+        public float GetValue()
         {
             return (float)(_randomizer.NextDouble() * (_highLimit - _lowLimit) + _lowLimit);
         }
