@@ -35,11 +35,11 @@ namespace hsm_api.Infrastructure
         /// Autoreset-Timer with interval from <see cref="T.Interval"/>
         /// Timer is started after construction
         /// </summary>
-        public DynamicIntervalTimer(IOptionsMonitor<T> settings)
+        public DynamicIntervalTimer(IOptionsMonitor<T> settingsWrapper)
         {
             _eventHandlers = new List<ElapsedEventHandler>();
-            UpdateTimerSettings(settings.CurrentValue);
-            settings.OnChange(UpdateTimerSettings);
+            UpdateTimerSettings(settingsWrapper.CurrentValue);
+            settingsWrapper.OnChange(UpdateTimerSettings);
         }
 
         public void UpdateTimerSettings(T settings)
