@@ -33,7 +33,21 @@ The functionality will be implemented in the order listed below.
 
 ## Docs
 
+### All Messages
+
+`Fields`
+
+- Message Id - Unique identifier of an HTTP message
+- Message Creation Date - Time of message creation
+
 ### Production Start
+
+`Fields`
+
+- Coil Id - Unique identifier of an hot band coil
+- Production Start Date - Time of production start
+
+`Flow`
 
 <img src="images/START_PRODUCTION_FLOW.JPG" alt="Planned Functionality" />
 
