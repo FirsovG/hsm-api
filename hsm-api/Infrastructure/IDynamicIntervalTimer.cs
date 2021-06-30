@@ -1,4 +1,4 @@
-﻿using hsm_api.ConfigurationOptions;
+﻿using hsm_api.ConfigurationOptions.TimerSettings;
 using System.Timers;
 
 namespace hsm_api.Infrastructure

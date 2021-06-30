@@ -1,4 +1,4 @@
-﻿using hsm_api.ConfigurationOptions;
+﻿using hsm_api.ConfigurationOptions.TimerSettings;
 using hsm_api.Infrastructure;
 using Microsoft.Extensions.Options;
 using Moq;

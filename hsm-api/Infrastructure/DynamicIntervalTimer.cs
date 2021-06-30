@@ -1,4 +1,4 @@
-﻿using hsm_api.ConfigurationOptions;
+﻿using hsm_api.ConfigurationOptions.TimerSettings;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;

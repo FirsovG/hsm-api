@@ -1,4 +1,4 @@
-﻿using hsm_api.ConfigurationOptions;
+﻿using hsm_api.ConfigurationOptions.TimerSettings;
 using hsm_api.Infrastructure;
 using hsm_api.Models;
 using hsm_api.Models.Messages;
