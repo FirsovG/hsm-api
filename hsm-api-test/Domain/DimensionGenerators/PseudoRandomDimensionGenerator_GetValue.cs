@@ -8,14 +8,14 @@ using Xunit;
 
 namespace hsm_api_test.Domain.DimensionGenerators
 {
-    public class PseudoRandomDimensionsGenerator_GetValue
+    public class PseudoRandomDimensionGenerator_GetValue
     {
         [Theory]
         [InlineData(1000, 2000)]
         [InlineData(1000, 1500)]
         [InlineData(1500, 2000)]
         [InlineData(1000, 1002)]
-        public void GetRandomWidth_Limits_Considered(float lowLimit, float highLimit)
+        public void GetValue_Limits_Considered(float lowLimit, float highLimit)
         {
             var generator = new PseudoRandomDimensionGenerator(lowLimit, highLimit);
             float randomValue = generator.GetValue();
@@ -24,7 +24,7 @@ namespace hsm_api_test.Domain.DimensionGenerators
         } 
 
         [Fact]
-        public void GetRandomWidth_Randomizer_Depend_On_Seed()
+        public void GetValue_Randomizer_Depend_On_Seed()
         {
             const int seed = 5;
             const int lowLimit = 500;
