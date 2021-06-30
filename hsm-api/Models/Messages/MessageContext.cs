@@ -7,7 +7,8 @@ namespace hsm_api.Models.Messages
     {
         public MessageContext(DbContextOptions<MessageContext> options) : base(options) { }
         public DbSet<StartProductionMessage> StartProductionMessages { get; set; }
-
+        public DbSet<FinishProductionMessage> FinishProductionMessages { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

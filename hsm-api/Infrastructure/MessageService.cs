@@ -15,7 +15,8 @@ namespace hsm_api.Infrastructure
             if (FormatMessageName(name) != name)
                 throw new FormatException($"Invalid message name format, use {nameof(MessageService.FormatMessageName)} before");
 
-            if (name == GetMessageNameFromMessageClass(typeof(StartProductionMessage)))
+            if (name == GetMessageNameFromMessageClass(typeof(StartProductionMessage)) ||
+                name == GetMessageNameFromMessageClass(typeof(FinishProductionMessage)))
                 return true;
             else
                 return false;

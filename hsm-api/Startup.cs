@@ -1,4 +1,5 @@
 using hsm_api.ConfigurationOptions;
+using hsm_api.Domain.FinishProduction;
 using hsm_api.Domain.StartProduction;
 using hsm_api.Infrastructure;
 using hsm_api.Models;
@@ -26,12 +27,17 @@ namespace hsm_api
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<StartProductionTimerSettings>(Configuration.GetSection(nameof(StartProductionTimerSettings)));
+            services.Configure<FinishProductionTimerSettings>(Configuration.GetSection(nameof(FinishProductionTimerSettings)));
             services.AddDbContext<WebhookContext>(opt => opt.UseInMemoryDatabase(nameof(Webhook)));
             services.AddDbContext<MessageContext>(opt => opt.UseInMemoryDatabase(nameof(Message)));
             services.AddSingleton<IDynamicIntervalTimer<StartProductionTimerSettings>, DynamicIntervalTimer<StartProductionTimerSettings>>();
+            services.AddSingleton<IDynamicIntervalTimer<FinishProductionTimerSettings>, DynamicIntervalTimer<FinishProductionTimerSettings>>();
             services.AddHttpClient<StartProductionHttpMessageSender>();
+            services.AddHttpClient<FinishProductionHttpMessageSender>();
             services.AddSingleton<StartProductionHttpMessageSender>();
+            services.AddSingleton<FinishProductionHttpMessageSender>();
             services.AddSingleton<StartProductionService>();
+            services.AddSingleton<FinishProductionService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -66,6 +72,7 @@ namespace hsm_api
         private static void InitTimers(IApplicationBuilder app)
         {
             app.ApplicationServices.GetService<IDynamicIntervalTimer<StartProductionTimerSettings>>();
+            app.ApplicationServices.GetService<IDynamicIntervalTimer<FinishProductionTimerSettings>>();
         }
     }
 }
