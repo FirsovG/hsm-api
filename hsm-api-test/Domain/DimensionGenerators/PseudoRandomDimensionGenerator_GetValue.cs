@@ -1,5 +1,7 @@
 ﻿using hsm_api.ConfigurationOptions.DimensionSettings;
 using hsm_api.Domain.DimensionGenerators;
+using Microsoft.Extensions.Options;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +20,9 @@ namespace hsm_api_test.Domain.DimensionGenerators
         [InlineData(1000, 1002)]
         public void GetValue_Limits_Considered(float minLimit, float maxLimit)
         {
-            var settings = new WidthGeneratorSettings { MinLimit = minLimit, MaxLimit = maxLimit };
-            var generator = new PseudoRandomDimensionGenerator<WidthGeneratorSettings>(settings);
+            var settings = Mock.Of<IDimensionGeneratorSettings>(_ => _.MinLimit == minLimit && _.MaxLimit == maxLimit );
+            var settingsWrapper = Mock.Of<IOptionsMonitor<IDimensionGeneratorSettings>>(_ => _.CurrentValue == settings);
+            var generator = new PseudoRandomDimensionGenerator<IDimensionGeneratorSettings>(settingsWrapper);
             float randomValue = generator.GetValue();
             Assert.True(randomValue > settings.MinLimit, "Random value should be higher than min limit");
             Assert.True(randomValue < settings.MaxLimit, "Random value should be smaller than max limit");
@@ -29,12 +32,13 @@ namespace hsm_api_test.Domain.DimensionGenerators
         public void GetValue_Randomizer_Depend_On_Seed()
         {
             const int seed = 5;
-            var settings = new WidthGeneratorSettings { MinLimit = 500, MaxLimit = 1000 };
+            var settings = Mock.Of<IDimensionGeneratorSettings>(_ => _.MinLimit == 500 && _.MaxLimit == 1000);
+            var settingsWrapper = Mock.Of<IOptionsMonitor<IDimensionGeneratorSettings>>(_ => _.CurrentValue == settings);
             var randomizer1 = new Random(seed);
-            var generator1 = new PseudoRandomDimensionGenerator<WidthGeneratorSettings>(randomizer1, settings);
+            var generator1 = new PseudoRandomDimensionGenerator<IDimensionGeneratorSettings>(randomizer1, settingsWrapper);
             var generatedValue1 = new float[10];
             var randomizer2 = new Random(seed);
-            var generator2 = new PseudoRandomDimensionGenerator<WidthGeneratorSettings>(randomizer2, settings);
+            var generator2 = new PseudoRandomDimensionGenerator<IDimensionGeneratorSettings>(randomizer2, settingsWrapper);
             var generatedValue2 = new float[10];
 
             for (int i = 0; i < generatedValue1.Length; i++)

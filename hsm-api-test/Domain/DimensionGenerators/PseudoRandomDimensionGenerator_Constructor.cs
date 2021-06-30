@@ -1,5 +1,7 @@
 ﻿using hsm_api.ConfigurationOptions.DimensionSettings;
 using hsm_api.Domain.DimensionGenerators;
+using Microsoft.Extensions.Options;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +19,9 @@ namespace hsm_api_test.Domain.DimensionGenerators
         [InlineData(-10, -5)]
         public void Constructor_Not_Accept_Negative_Limits(float minLimit, float maxLimit)
         {
-            var settings = new WidthGeneratorSettings { MinLimit = minLimit, MaxLimit = maxLimit };
-            Action construction = () => new PseudoRandomDimensionGenerator<WidthGeneratorSettings>(settings);
+            var settings = Mock.Of<IDimensionGeneratorSettings>(_ => _.MinLimit == minLimit && _.MaxLimit == maxLimit);
+            var settingsWrapper = Mock.Of<IOptionsMonitor<IDimensionGeneratorSettings>>(_ => _.CurrentValue == settings);
+            Action construction = () => new PseudoRandomDimensionGenerator<IDimensionGeneratorSettings>(settingsWrapper);
 
             var exception = Assert.Throws<ArgumentException>(construction);
             Assert.Contains("negative", exception.Message, StringComparison.InvariantCultureIgnoreCase);
@@ -31,8 +34,9 @@ namespace hsm_api_test.Domain.DimensionGenerators
         [InlineData(1000, 500)]
         public void Constructor_Not_Accept_Limit_Difference_Lower_2(float minLimit, float maxLimit)
         {
-            var settings = new WidthGeneratorSettings { MinLimit = minLimit, MaxLimit = maxLimit };
-            Action construction = () => new PseudoRandomDimensionGenerator<WidthGeneratorSettings>(settings);
+            var settings = Mock.Of<IDimensionGeneratorSettings>(_ => _.MinLimit == minLimit && _.MaxLimit == maxLimit);
+            var settingsWrapper = Mock.Of<IOptionsMonitor<IDimensionGeneratorSettings>>(_ => _.CurrentValue == settings);
+            Action construction = () => new PseudoRandomDimensionGenerator<IDimensionGeneratorSettings>(settingsWrapper);
 
             var exception = Assert.Throws<ArgumentException>(construction);
             Assert.Contains("To create value in range, the limit difference should be greater or equal 2", 
