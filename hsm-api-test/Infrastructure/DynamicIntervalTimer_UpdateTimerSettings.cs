@@ -24,7 +24,7 @@ namespace hsm_api_test.Infrastructure
 
             timer.TimeElapsed += (_, _) => timeElapsedCount++;
             timer.UpdateTimerSettings(shortInterval);
-            Task.Delay(10).Wait();
+            Task.Delay(50).Wait();
 
             Assert.True(timeElapsedCount > 0, "Timer fired at least once");
         }
