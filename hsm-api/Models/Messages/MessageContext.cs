@@ -1,4 +1,5 @@
-﻿using hsm_api.Infrastructure.ValueGenerators;
+﻿using hsm_api.ConfigurationOptions.DimensionSettings;
+using hsm_api.Infrastructure.ValueGenerators;
 using Microsoft.EntityFrameworkCore;
 
 namespace hsm_api.Models.Messages
@@ -16,6 +17,18 @@ namespace hsm_api.Models.Messages
             builder.Entity<StartProductionMessage>()
                 .Property(x => x.CoilId)
                 .HasValueGenerator<CoilIdValueGenerator>();
+
+            builder.Entity<FinishProductionMessage>()
+                .Property(x => x.Width)
+                .HasValueGenerator<DimensionValueGenerator<WidthGeneratorSettings>>();
+
+            builder.Entity<FinishProductionMessage>()
+                .Property(x => x.Weight)
+                .HasValueGenerator<DimensionValueGenerator<WeightGeneratorSettings>>();
+
+            builder.Entity<FinishProductionMessage>()
+                .Property(x => x.Thickness)
+                .HasValueGenerator<DimensionValueGenerator<ThicknessGeneratorSettings>>();
         }
     }
 }

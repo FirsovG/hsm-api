@@ -1,4 +1,6 @@
+using hsm_api.ConfigurationOptions.DimensionSettings;
 using hsm_api.ConfigurationOptions.TimerSettings;
+using hsm_api.Domain.DimensionGenerators;
 using hsm_api.Domain.FinishProduction;
 using hsm_api.Domain.StartProduction;
 using hsm_api.Infrastructure;
@@ -28,8 +30,14 @@ namespace hsm_api
         {
             services.Configure<StartProductionTimerSettings>(Configuration.GetSection(nameof(StartProductionTimerSettings)));
             services.Configure<FinishProductionTimerSettings>(Configuration.GetSection(nameof(FinishProductionTimerSettings)));
+            services.Configure<ThicknessGeneratorSettings>(Configuration.GetSection(nameof(ThicknessGeneratorSettings)));
+            services.Configure<WidthGeneratorSettings>(Configuration.GetSection(nameof(WidthGeneratorSettings)));
+            services.Configure<WeightGeneratorSettings>(Configuration.GetSection(nameof(WeightGeneratorSettings)));
             services.AddDbContext<WebhookContext>(opt => opt.UseInMemoryDatabase(nameof(Webhook)));
             services.AddDbContext<MessageContext>(opt => opt.UseInMemoryDatabase(nameof(Message)));
+            services.AddScoped<PseudoRandomDimensionGenerator<ThicknessGeneratorSettings>>();
+            services.AddScoped<PseudoRandomDimensionGenerator<WidthGeneratorSettings>>();
+            services.AddScoped<PseudoRandomDimensionGenerator<WeightGeneratorSettings>>();
             services.AddSingleton<IDynamicIntervalTimer<StartProductionTimerSettings>, DynamicIntervalTimer<StartProductionTimerSettings>>();
             services.AddSingleton<IDynamicIntervalTimer<FinishProductionTimerSettings>, DynamicIntervalTimer<FinishProductionTimerSettings>>();
             services.AddHttpClient<StartProductionHttpMessageSender>();
