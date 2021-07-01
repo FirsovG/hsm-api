@@ -52,10 +52,14 @@ namespace hsm_api.Domain.StartProduction
             var webhookContext = scope.ServiceProvider.GetRequiredService<WebhookContext>();
             var subscribers = GetSubscribers(webhookContext);
             var messageContext = scope.ServiceProvider.GetRequiredService<MessageContext>();
-            var message = await GetStartProductionMessage(messageContext);
+
+            // coil is generated at first loop run, kept same for others
+            (string CoilId, DateTime ProductionStart) startedCoilData = (null, DateTime.Now);
             foreach (var s in subscribers)
             {
+                var message = await GetStartProductionMessage(messageContext, startedCoilData);
                 await _messageSender.PostAsync(message, s);
+                startedCoilData.CoilId = message.CoilId;
             }
         }
 
@@ -65,9 +69,11 @@ namespace hsm_api.Domain.StartProduction
             return webhookContext.Webhooks.Where(x => x.IsActive == true && x.SubscribedPlantEvent == eventName);
         }
 
-        private async Task<StartProductionMessage> GetStartProductionMessage(MessageContext context)
+        private async Task<StartProductionMessage> GetStartProductionMessage(MessageContext context, (string CoilId, DateTime ProductionStart) coilData)
         {
             var message = new StartProductionMessage();
+            message.CoilId = coilData.CoilId;
+            message.ProductionStartDate = coilData.ProductionStart;
             context.StartProductionMessages.Add(message);
             await context.SaveChangesAsync();
             return message;

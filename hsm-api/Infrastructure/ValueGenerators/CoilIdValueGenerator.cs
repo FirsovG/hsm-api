@@ -11,13 +11,20 @@ namespace hsm_api.Infrastructure.ValueGenerators
     public class CoilIdValueGenerator : ValueGenerator<string>
     {
         private int _current;
+        private readonly string propertyName = nameof(CoilIdValueGenerator).Replace("ValueGenerator", "");
 
         public override bool GeneratesTemporaryValues => false;
 
         public override string Next(EntityEntry entry)
         {
-            Interlocked.Increment(ref _current);
-            return "HB" + _current.ToString().PadLeft(10, '0');
+            string propertyValue = (string)entry.Property(propertyName).OriginalValue;
+            if (propertyValue == null)
+            {
+                Interlocked.Increment(ref _current);
+                return "HB" + _current.ToString().PadLeft(10, '0');
+            }
+            else
+                return propertyValue;
         }
     }
 }
