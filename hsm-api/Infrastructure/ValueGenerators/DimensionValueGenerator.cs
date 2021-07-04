@@ -10,13 +10,15 @@ using System.Threading.Tasks;
 
 namespace hsm_api.Infrastructure.ValueGenerators
 {
-    public class DimensionValueGenerator<T> : ValueGenerator<float> where T : IDimensionGeneratorSettings
+    public class DimensionValueGenerator<T> : ConditionFulfillmentValueGenerator<float> where T : IDimensionGeneratorSettings
     {
         private PseudoRandomDimensionGenerator<T> _generator;
 
-        public override bool GeneratesTemporaryValues => false;
+        protected override string PropertyName => typeof(T).Name.Replace("GeneratorSettings", "");
 
-        public override float Next(EntityEntry entry)
+        protected override bool IsFulfilledCondition(float propertyValue) => propertyValue == 0;
+
+        protected override float GetNewValue(EntityEntry entry)
         {
             // Workaround, because only parameterless constructor is called
             // https://github.com/dotnet/efcore/issues/10792#issuecomment-560134363

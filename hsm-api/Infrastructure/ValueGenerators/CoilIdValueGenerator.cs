@@ -8,23 +8,19 @@ using System.Threading.Tasks;
 
 namespace hsm_api.Infrastructure.ValueGenerators
 {
-    public class CoilIdValueGenerator : ValueGenerator<string>
+    public class CoilIdValueGenerator : ConditionFulfillmentValueGenerator<string>
     {
         private int _current;
-        private readonly string propertyName = nameof(CoilIdValueGenerator).Replace("ValueGenerator", "");
 
-        public override bool GeneratesTemporaryValues => false;
+        protected override string PropertyName => 
+            nameof(CoilIdValueGenerator).Replace("ValueGenerator", "");
 
-        public override string Next(EntityEntry entry)
+        protected override bool IsFulfilledCondition(string propertyValue) => propertyValue == null;
+
+        protected override string GetNewValue(EntityEntry entry)
         {
-            string propertyValue = (string)entry.Property(propertyName).OriginalValue;
-            if (propertyValue == null)
-            {
-                Interlocked.Increment(ref _current);
-                return "HB" + _current.ToString().PadLeft(10, '0');
-            }
-            else
-                return propertyValue;
+            Interlocked.Increment(ref _current);
+            return "HB" + _current.ToString().PadLeft(10, '0');
         }
     }
 }
