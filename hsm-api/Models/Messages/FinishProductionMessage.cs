@@ -8,7 +8,7 @@ namespace hsm_api.Models.Messages
     public class FinishProductionMessage : Message
     {
         public string CoilId { get; set; }
-        public DateTime ProductionFinishDate { get; set; } = DateTime.Now.AddSeconds(-95);
+        public DateTime ProductionFinishDate { get; set; }
         public float Width { get; set; }
         public float Thickness { get; set; }
         public float Weight { get; set; }

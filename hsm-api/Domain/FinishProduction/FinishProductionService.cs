@@ -48,10 +48,17 @@ namespace hsm_api.Domain.FinishProduction
             var webhookContext = scope.ServiceProvider.GetRequiredService<WebhookContext>();
             var subscribers = GetSubscribers(webhookContext);
             var messageContext = scope.ServiceProvider.GetRequiredService<MessageContext>();
-            var message = await GetFinishProductionMessage(messageContext);
+            (string CoilId, DateTime ProductionFinishDate, float Width, float Thickness, float Weight) finishedCoilData = 
+                (null, DateTime.Now, 0, 0, 0);
             foreach (var s in subscribers)
             {
+                var message = await GetFinishProductionMessage(messageContext, finishedCoilData);
                 await _messageSender.PostAsync(message, s);
+                finishedCoilData.CoilId = message.CoilId;
+                finishedCoilData.ProductionFinishDate = message.ProductionFinishDate;
+                finishedCoilData.Width = message.Width;
+                finishedCoilData.Thickness = message.Thickness;
+                finishedCoilData.Weight = message.Weight;
             }
         }
 
@@ -61,9 +68,15 @@ namespace hsm_api.Domain.FinishProduction
             return webhookContext.Webhooks.Where(x => x.IsActive == true && x.SubscribedPlantEvent == eventName);
         }
 
-        private async Task<FinishProductionMessage> GetFinishProductionMessage(MessageContext context)
+        private async Task<FinishProductionMessage> GetFinishProductionMessage(MessageContext context, (string CoilId, DateTime ProductionFinishDate, 
+                                                                                                        float Width, float Thickness, float Weight) finishedCoilData)
         {
             var message = new FinishProductionMessage();
+            message.CoilId = finishedCoilData.CoilId;
+            message.ProductionFinishDate = finishedCoilData.ProductionFinishDate;
+            message.Width = finishedCoilData.Width;
+            message.Thickness = finishedCoilData.Thickness;
+            message.Weight = finishedCoilData.Weight;
             context.FinishProductionMessages.Add(message);
             await context.SaveChangesAsync();
             return message;
