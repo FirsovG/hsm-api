@@ -49,7 +49,8 @@ namespace hsm_api.Domain.FinishProduction
             var subscribers = GetSubscribers(webhookContext);
             var messageContext = scope.ServiceProvider.GetRequiredService<MessageContext>();
             (string CoilId, DateTime ProductionFinishDate, float Width, float Thickness, float Weight) finishedCoilData = 
-                (null, DateTime.Now, 0, 0, 0);
+                (GetIdOfOldestCoilAtProductionStart(messageContext), DateTime.Now, 0, 0, 0);
+            SetCoilProductionStartToProduced(messageContext, finishedCoilData.CoilId);
             foreach (var s in subscribers)
             {
                 var message = await GetFinishProductionMessage(messageContext, finishedCoilData);
@@ -60,6 +61,19 @@ namespace hsm_api.Domain.FinishProduction
                 finishedCoilData.Thickness = message.Thickness;
                 finishedCoilData.Weight = message.Weight;
             }
+        }
+
+        private string GetIdOfOldestCoilAtProductionStart(MessageContext messageContext) =>
+            messageContext.StartProductionMessages.Where(x => !x.WasProduced)
+                                                  .OrderBy(x => x.ProductionStartDate)
+                                                  .FirstOrDefault()
+                                                  ?.CoilId;
+
+        private void SetCoilProductionStartToProduced(MessageContext messageContext, string coilId)
+        {
+            var productionStart = messageContext.StartProductionMessages.FirstOrDefault(x => x.CoilId == coilId);
+            if (productionStart != null)
+                productionStart.WasProduced = true;
         }
 
         private IEnumerable<Webhook> GetSubscribers(WebhookContext webhookContext)
