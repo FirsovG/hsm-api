@@ -13,5 +13,7 @@ namespace hsm_api.Models.Messages
     {
         public string CoilId { get; set; }
         public DateTime ProductionStartDate { get; set; }
+        [JsonIgnore]
+        public bool WasProduced { get; set; }
     }
 }
