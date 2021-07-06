@@ -6,7 +6,7 @@
 
 ## Planned Functionality
 
-<img src="images/STEPS_TELEGRAMS.JPG" alt="Planned Functionality" />
+<img src="images/PRODUCTION_OVERVIEW.JPG" alt="Planned Functionality" />
 
 ## Roadmap by functionality
 
