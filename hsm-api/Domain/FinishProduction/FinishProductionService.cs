@@ -56,7 +56,6 @@ namespace hsm_api.Domain.FinishProduction
                 var message = await GetFinishProductionMessage(messageContext, finishedCoilData);
                 await _messageSender.PostAsync(message, s);
                 finishedCoilData.CoilId = message.CoilId;
-                finishedCoilData.ProductionFinishDate = message.ProductionFinishDate;
                 finishedCoilData.Width = message.Width;
                 finishedCoilData.Thickness = message.Thickness;
                 finishedCoilData.Weight = message.Weight;
