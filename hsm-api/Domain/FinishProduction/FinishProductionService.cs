@@ -17,7 +17,7 @@ namespace hsm_api.Domain.FinishProduction
         private readonly FinishProductionHttpMessageSender _messageSender;
 
         /// <summary>
-        /// Service handels material production start events
+        /// Service handels material production finish events
         /// </summary>
         public FinishProductionService(IDynamicIntervalTimer<FinishProductionTimerSettings> timer,
                                        IServiceScopeFactory scopeFactory,
@@ -32,18 +32,18 @@ namespace hsm_api.Domain.FinishProduction
 
         private void SubscribeToTimer()
         {
-            _timer.TimeElapsed += NewProductionStartHandler;
+            _timer.TimeElapsed += ProductionFinishHandler;
         }
 
-        private async void NewProductionStartHandler(object sender, System.Timers.ElapsedEventArgs e)
+        private async void ProductionFinishHandler(object sender, System.Timers.ElapsedEventArgs e)
         {
             using (var scope = _scopeFactory.CreateScope())
             {
-                await GetSubsAndPostProductionStart(scope);
+                await GetSubsAndPostProductionFinish(scope);
             }
         }
 
-        private async Task GetSubsAndPostProductionStart(IServiceScope scope)
+        private async Task GetSubsAndPostProductionFinish(IServiceScope scope)
         {
             var webhookContext = scope.ServiceProvider.GetRequiredService<WebhookContext>();
             var subscribers = GetSubscribers(webhookContext);
