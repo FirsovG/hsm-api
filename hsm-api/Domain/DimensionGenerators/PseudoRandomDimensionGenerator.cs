@@ -29,8 +29,6 @@ namespace hsm_api.Domain.DimensionGenerators
                 throw new ArgumentException("Min limit cannot be a negative value");
             if (settings.MaxLimit < 0)
                 throw new ArgumentException("Max limit cannot be a negative value");
-            if (settings.MaxLimit - settings.MinLimit < 2)
-                throw new ArgumentException("To create value in range, the limit difference should be greater or equal 2");
 
             _settings = settings;
         }
