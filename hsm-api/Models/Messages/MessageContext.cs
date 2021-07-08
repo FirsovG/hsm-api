@@ -9,7 +9,8 @@ namespace hsm_api.Models.Messages
         public MessageContext(DbContextOptions<MessageContext> options) : base(options) { }
         public DbSet<StartProductionMessage> StartProductionMessages { get; set; }
         public DbSet<FinishProductionMessage> FinishProductionMessages { get; set; }
-        
+        public DbSet<ProductionStatusMessage> ProductionStatusMessages { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -29,6 +30,14 @@ namespace hsm_api.Models.Messages
             builder.Entity<FinishProductionMessage>()
                 .Property(x => x.Thickness)
                 .HasValueGenerator<DimensionValueGenerator<ThicknessGeneratorSettings>>();
+
+            builder.Entity<ProductionStatusMessage>()
+                .Property(x => x.MillSpeed)
+                .HasValueGenerator<DimensionValueGenerator<MillSpeedGeneratorSettings>>();
+
+            builder.Entity<ProductionStatusMessage>()
+                .Property(x => x.CoilingSpeed)
+                .HasValueGenerator<DimensionValueGenerator<CoilingSpeedGeneratorSettings>>();
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Text;
 using hsm_api.Domain.StartProduction;
 using hsm_api.Infrastructure;
 using hsm_api.Domain.FinishProduction;
+using hsm_api.Domain.ProductionStatus;
 
 namespace hsm_api.Controllers
 {
@@ -21,14 +22,17 @@ namespace hsm_api.Controllers
         private readonly WebhookContext _context;
         private readonly StartProductionService _startProductionHandler;
         private readonly FinishProductionService _finishProductionService;
+        private readonly ProductionStatusService _productionStatusService;
 
         public WebhooksController(WebhookContext context, 
                                   StartProductionService startProductionHandler,
-                                  FinishProductionService finishProductionService)
+                                  FinishProductionService finishProductionService,
+                                  ProductionStatusService productionStatusService)
         {
             _context = context;
             _startProductionHandler = startProductionHandler;
             _finishProductionService = finishProductionService;
+            _productionStatusService = productionStatusService;
         }
 
         [HttpGet("{id}")]

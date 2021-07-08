@@ -2,6 +2,7 @@ using hsm_api.ConfigurationOptions.DimensionSettings;
 using hsm_api.ConfigurationOptions.TimerSettings;
 using hsm_api.Domain.DimensionGenerators;
 using hsm_api.Domain.FinishProduction;
+using hsm_api.Domain.ProductionStatus;
 using hsm_api.Domain.StartProduction;
 using hsm_api.Infrastructure;
 using hsm_api.Models;
@@ -30,22 +31,31 @@ namespace hsm_api
         {
             services.Configure<StartProductionTimerSettings>(Configuration.GetSection(nameof(StartProductionTimerSettings)));
             services.Configure<FinishProductionTimerSettings>(Configuration.GetSection(nameof(FinishProductionTimerSettings)));
+            services.Configure<ProductionStatusTimerSettings>(Configuration.GetSection(nameof(ProductionStatusTimerSettings)));
             services.Configure<ThicknessGeneratorSettings>(Configuration.GetSection(nameof(ThicknessGeneratorSettings)));
             services.Configure<WidthGeneratorSettings>(Configuration.GetSection(nameof(WidthGeneratorSettings)));
             services.Configure<WeightGeneratorSettings>(Configuration.GetSection(nameof(WeightGeneratorSettings)));
+            services.Configure<MillSpeedGeneratorSettings>(Configuration.GetSection(nameof(MillSpeedGeneratorSettings)));
+            services.Configure<CoilingSpeedGeneratorSettings>(Configuration.GetSection(nameof(CoilingSpeedGeneratorSettings)));
             services.AddDbContext<WebhookContext>(opt => opt.UseInMemoryDatabase(nameof(Webhook)));
             services.AddDbContext<MessageContext>(opt => opt.UseInMemoryDatabase(nameof(Message)));
             services.AddScoped<PseudoRandomDimensionGenerator<ThicknessGeneratorSettings>>();
             services.AddScoped<PseudoRandomDimensionGenerator<WidthGeneratorSettings>>();
             services.AddScoped<PseudoRandomDimensionGenerator<WeightGeneratorSettings>>();
+            services.AddScoped<PseudoRandomDimensionGenerator<MillSpeedGeneratorSettings>>();
+            services.AddScoped<PseudoRandomDimensionGenerator<CoilingSpeedGeneratorSettings>>();
             services.AddSingleton<IDynamicIntervalTimer<StartProductionTimerSettings>, DynamicIntervalTimer<StartProductionTimerSettings>>();
             services.AddSingleton<IDynamicIntervalTimer<FinishProductionTimerSettings>, DynamicIntervalTimer<FinishProductionTimerSettings>>();
+            services.AddSingleton<IDynamicIntervalTimer<ProductionStatusTimerSettings>, DynamicIntervalTimer<ProductionStatusTimerSettings>>();
             services.AddHttpClient<StartProductionHttpMessageSender>();
             services.AddHttpClient<FinishProductionHttpMessageSender>();
+            services.AddHttpClient<ProductionStatusHttpMessageSender>();
             services.AddSingleton<StartProductionHttpMessageSender>();
             services.AddSingleton<FinishProductionHttpMessageSender>();
+            services.AddSingleton<ProductionStatusHttpMessageSender>();
             services.AddSingleton<StartProductionService>();
             services.AddSingleton<FinishProductionService>();
+            services.AddSingleton<ProductionStatusService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -81,6 +91,7 @@ namespace hsm_api
         {
             app.ApplicationServices.GetService<IDynamicIntervalTimer<StartProductionTimerSettings>>();
             app.ApplicationServices.GetService<IDynamicIntervalTimer<FinishProductionTimerSettings>>();
+            app.ApplicationServices.GetService<IDynamicIntervalTimer<ProductionStatusTimerSettings>>();
         }
     }
 }
