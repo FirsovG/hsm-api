@@ -28,7 +28,7 @@ namespace hsm_api.Domain.FinishProduction
             const string mediaType = "application/json";
             var messageAsJson = JsonSerializer.Serialize(message);
             await _httpClient.PostAsync(subscriber.CallbackUrl, new StringContent(messageAsJson, Encoding.UTF8, mediaType));
-            _logger.LogInformation($"Start production event was sent to {subscriber.CallbackUrl}");
+            _logger.LogInformation($"Finish production event was sent to {subscriber.CallbackUrl}");
         }
     }
 }
